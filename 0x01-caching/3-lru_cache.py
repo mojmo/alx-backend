@@ -32,7 +32,7 @@ class LRUCache(BaseCaching):
         if key in self.cache_data:
             # Move accessed key to the front of the order list (LRU)
             self.cache_order.remove(key)
-            self.cache_order.insert(0, key)
+            self.cache_order.append(key)
         else:
             if len(self.cache_data) >= BaseCaching.MAX_ITEMS:
                 # LRU eviction: remove least recently used entry
@@ -57,5 +57,5 @@ class LRUCache(BaseCaching):
             return None
         # Move accessed key to the front of the order list (LRU)
         self.cache_order.remove(key)
-        self.cache_order.insert(0, key)
+        self.cache_order.append(key)
         return self.cache_data[key]
