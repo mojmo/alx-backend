@@ -15,7 +15,6 @@ class LRUCache(BaseCaching):
         Initializes an empty cache with an LRU eviction strategy.
         """
         super().__init__()
-        self.cache_data = {}
         self.cache_order = []  # Track access order for LRU eviction
 
     def put(self, key, item):
@@ -37,7 +36,7 @@ class LRUCache(BaseCaching):
         else:
             if len(self.cache_data) >= BaseCaching.MAX_ITEMS:
                 # LRU eviction: remove least recently used entry
-                discarded_key = self.cache_order.pop()
+                discarded_key = self.cache_order.pop(0)
                 del self.cache_data[discarded_key]
                 print(f"DISCARD: {discarded_key}")
             self.cache_order.append(key)  # Update access order
