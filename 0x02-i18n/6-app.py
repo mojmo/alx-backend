@@ -75,30 +75,28 @@ def get_locale() -> str:
     return request.accept_languages.best_match(Config.LANGUAGES)
 
 
-def get_user(user_id: str) -> Union[Dict[str, Union[str, None]], None]:
+def get_user() -> Union[Dict[str, Union[str, None]], None]:
     """
-    Retrieves the user information based on the provided ID.
-
-    Args:
-        user_id (str): The user ID to retrieve information for.
+    Retrieves the user information.
 
     Returns:
-        dict: The user dictionary if found, otherwise raises a BadRequest exception.
+        dict: The user dictionary if found.
     """
 
-    user_id = int(user_id)
+    user_id = request.args.get('login_as')
 
-    return users.get(user_id, {})
+    if user_id:
+        return users.get(int(user_id))
+
+    return None
 
 
 @app.before_request
 def before_request():
     """Sets the locale and timezone for the request."""
 
-    login_as = request.args.get('login_as')
-
-    if login_as:
-        g.user = get_user(login_as)
+    user = get_user()
+    g.user = user
 
 
 if __name__ == '__main__':
