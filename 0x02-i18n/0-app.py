@@ -7,6 +7,7 @@ from flask import Flask, render_template
 
 app = Flask(__name__)
 
+
 @app.route('/')
 def hello_world() -> str:
     """Renders the '0-index.html' template and returns the response.
