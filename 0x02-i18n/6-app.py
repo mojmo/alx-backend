@@ -7,7 +7,6 @@ A simple Flask application with basic internationalization
 
 from typing import Dict, Union
 from flask import Flask, g, render_template, request
-import flask
 from flask_babel import Babel
 
 
@@ -72,6 +71,10 @@ def get_locale() -> str:
         return locale
 
     # 3. Locale from request headers
+    locale = request.headers.get('locale', None)
+    if locale in Config.LANGUAGES:
+        return locale
+
     return request.accept_languages.best_match(Config.LANGUAGES)
 
 
