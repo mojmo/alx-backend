@@ -59,16 +59,16 @@ def get_locale() -> str:
         str: The selected locale code.
     """
 
-    # 1. User locale (highest priority)
+    # 1. Locale from URL parameter (highest priority)
+    locale = request.args.get('locale')
+    if locale and locale in Config.LANGUAGES:
+        return locale
+
+    # 2. User locale
     if g.user is not None and 'locale' in g.user:
         user_locale = g.user.get('locale')
         if user_locale in Config.LANGUAGES:
             return user_locale
-
-    # 2. Locale from URL parameter
-    locale = request.args.get('locale')
-    if locale and locale in Config.LANGUAGES:
-        return locale
 
     # 3. Locale from request headers
     locale = request.headers.get('locale', None)
