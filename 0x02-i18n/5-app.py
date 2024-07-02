@@ -11,14 +11,6 @@ import flask
 from flask_babel import Babel
 
 
-users = {
-    1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
-    2: {"name": "Beyonce", "locale": "en", "timezone": "US/Central"},
-    3: {"name": "Spock", "locale": "kg", "timezone": "Vulcan"},
-    4: {"name": "Teletubby", "locale": None, "timezone": "Europe/London"},
-}
-
-
 class Config(object):
     """The configuration class for the Flask application."""
 
@@ -30,6 +22,13 @@ class Config(object):
 app = Flask(__name__)
 app.config.from_object(Config)
 babel = Babel(app)
+
+users = {
+    1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
+    2: {"name": "Beyonce", "locale": "en", "timezone": "US/Central"},
+    3: {"name": "Spock", "locale": "kg", "timezone": "Vulcan"},
+    4: {"name": "Teletubby", "locale": None, "timezone": "Europe/London"},
+}
 
 
 @app.route('/')
@@ -62,10 +61,10 @@ def get_locale() -> str:
 
 
 def get_user() -> Union[Dict[str, Union[str, None]], None]:
-    """Returns the user from the request.
+    """Retrieves the user information based on login_as parameter or None.
 
     Returns:
-        str: The user from the request.
+        dict: The user dictionary if found, otherwise None.
     """
 
     user = int(request.args.get('login_as'))
