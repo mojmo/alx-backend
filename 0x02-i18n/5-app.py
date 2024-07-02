@@ -6,7 +6,7 @@ A simple Flask application with basic internationalization
 """
 
 from typing import Dict, Union
-from flask import Flask, render_template, request
+from flask import Flask, g, render_template, request
 import flask
 from flask_babel import Babel
 
@@ -60,29 +60,30 @@ def get_locale() -> str:
     return request.accept_languages.best_match(Config.LANGUAGES)
 
 
-def get_user() -> Union[Dict[str, Union[str, None]], None]:
-    """Retrieves the user information based on login_as parameter or None.
+def get_user(user_id: str) -> Union[Dict[str, Union[str, None]], None]:
+    """
+    Retrieves the user information based on the provided ID.
+
+    Args:
+        user_id (str): The user ID to retrieve information for.
 
     Returns:
-        dict: The user dictionary if found, otherwise None.
+        dict: The user dictionary if found, otherwise raises a BadRequest exception.
     """
 
-    user = int(request.args.get('login_as'))
+    user_id = int(user_id)
 
-    if user and user in users:
-        return users[user]
-
-    return None
+    return users.get(user_id, {})
 
 
 @app.before_request
 def before_request():
     """Sets the locale and timezone for the request."""
 
-    user = get_user()
+    login_as = request.args.get('login_as')
 
-    if user:
-        flask.g.user = user
+    if login_as:
+        g.user = get_user(login_as)
 
 
 if __name__ == '__main__':
