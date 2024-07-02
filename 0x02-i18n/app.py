@@ -5,9 +5,10 @@ A simple Flask application with basic internationalization
 (i18n) configuration.
 """
 
+from datetime import datetime
 from typing import Dict, Union
 from flask import Flask, g, render_template, request
-from flask_babel import Babel
+from flask_babel import Babel, format_datetime
 import pytz
 
 
@@ -101,6 +102,7 @@ def before_request():
 
     user = get_user()
     g.user = user
+    g.time = format_datetime(datetime.now())
 
 
 @babel.timezoneselector
