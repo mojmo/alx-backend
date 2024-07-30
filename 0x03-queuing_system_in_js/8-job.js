@@ -3,15 +3,21 @@ export default function createPushNotificationsJobs(jobs, queue) {
     throw new Error('Jobs is not an array');
   }
 
-  jobs.forEach((jobData) => {
-    const job = queue.create('push_notification_code_3', jobData)
-      .save((err) => {
-        if (!err) {
-          console.log(`Notification job created: ${job.id}`);
-        } else {
-          console.error(`Error creating job: ${err.message}`);
-        }
-      });
+  jobs.forEach((jobData, index) => {
+    const job = queue.create('push_notification_code_3', jobData);
+
+    // Check if the queue is in test mode and manually assign an ID
+    if (queue.testMode.jobs) {
+      job.id = index + 1; // Assign a sequential ID
+    }
+
+    job.save((err) => {
+      if (!err) {
+        console.log(`Notification job created: ${job.id}`);
+      } else {
+        console.error(`Error creating job: ${err.message}`);
+      }
+    });
 
     job.on('complete', () => {
       console.log(`Notification job ${job.id} completed`);
